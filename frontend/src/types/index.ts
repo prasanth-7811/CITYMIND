@@ -8,7 +8,10 @@ export interface DashboardData {
   avg_speed: number
   total_roads: number
   open_roads: number
+  top_congested_roads: { name: string; utilization: number }[]
   hotspots: Hotspot[]
+  data_source: string
+  last_updated: string
 }
 
 export interface Hotspot {
@@ -63,6 +66,7 @@ export interface ReportData {
   severity: number
   description: string
   confidence: number
+  status: string
 }
 
 export interface EventData {
@@ -92,20 +96,38 @@ export interface Metrics {
   citizens_affected: number
 }
 
+export interface AffectedRoad {
+  road: string
+  road_id: string
+  traffic_increase: number
+  severity: 'low' | 'medium' | 'high'
+}
+
 export interface SimulationResult {
   simulation_id: number
   scenario: string
   road: string
   risk_score: number
+  ml_congestion?: number
+  prediction_method?: string
   baseline: Metrics
   predicted: Metrics
   recommended: Metrics
-  affected_roads: { road: string; traffic_increase: number }[]
+  affected_roads: AffectedRoad[]
   emergency_impact: string
+  emergency_detail?: {
+    before: { score: number; accessible_nodes: number; blocked_nodes: number }
+    after: { score: number; accessible_nodes: number; blocked_nodes: number }
+  }
   citizens_affected: number
-  explanation: { factor: string; impact: number }[]
+  explanation: { factor: string; impact: number; importance?: number }[]
+  explanation_summary?: string
   recommendations: string[]
   context: Record<string, any>
+  network_stats?: {
+    baseline: Record<string, any>
+    post_scenario: Record<string, any>
+  }
 }
 
 export interface SimulateRequest {

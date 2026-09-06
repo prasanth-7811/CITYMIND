@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from backend.models.models import Road, Node, Zone, CitizenReport, Event
-from backend.ai.collective_intelligence import detect_hotspots, calculate_confidence
+from backend.ai.collective_intelligence import detect_hotspots
 
 def get_dashboard_data(db: Session) -> dict:
     roads = db.query(Road).all()
@@ -8,25 +8,45 @@ def get_dashboard_data(db: Session) -> dict:
     reports = db.query(CitizenReport).all()
     events = db.query(Event).all()
 
-    total_pop = sum(n.population for n in nodes)
-    active_issues = len([r for r in reports if r.status == "open"])
+    open_roads = [r for r in roads if r.status == "open"]
     active_events = [e for e in events if e.active]
-    avg_congestion = sum(r.traffic_volume / max(r.capacity, 1) for r in roads) / max(len(roads), 1) * 100
-    avg_speed = sum(r.avg_speed for r in roads) / max(len(roads), 1)
-    hospital_roads = [r for r in roads if r.id in ("R5", "R11", "R12")]
-    emergency_risk = 100 - (sum(r.traffic_volume / max(r.capacity, 1) for r in hospital_roads) / max(len(hospital_roads), 1) * 100)
+    open_reports = [r for r in reports if r.status == "open"]
+
+    avg_congestion = (
+        sum(r.traffic_volume / max(r.capacity, 1) for r in open_roads) /
+        max(len(open_roads), 1) * 100
+    )
+    avg_speed = sum(r.avg_speed for r in open_roads) / max(len(open_roads), 1)
+
+    # Emergency route health — roads leading to GKNM Hospital
+    hospital_roads = [r for r in roads if r.id in ("R6", "R16")]
+    hospital_util = (
+        sum(r.traffic_volume / max(r.capacity, 1) for r in hospital_roads) /
+        max(len(hospital_roads), 1)
+    ) if hospital_roads else 0
+    emergency_health = round((1 - hospital_util) * 100, 1)
+
+    # Congestion trend (last 5 roads by utilization)
+    sorted_roads = sorted(open_roads, key=lambda r: r.traffic_volume / max(r.capacity, 1), reverse=True)
+    top_congested = [
+        {"name": r.name, "utilization": round(r.traffic_volume / max(r.capacity, 1) * 100, 1)}
+        for r in sorted_roads[:5]
+    ]
 
     return {
         "congestion_risk": round(avg_congestion, 1),
-        "active_issues": active_issues,
+        "active_issues": len(open_reports),
         "citizen_reports": len(reports),
-        "affected_population": total_pop,
-        "emergency_route_risk": round(emergency_risk, 1),
+        "affected_population": sum(n.population for n in nodes),
+        "emergency_route_risk": emergency_health,
         "active_events": len(active_events),
         "avg_speed": round(avg_speed, 1),
         "total_roads": len(roads),
-        "open_roads": len([r for r in roads if r.status == "open"]),
-        "hotspots": detect_hotspots(reports)
+        "open_roads": len(open_roads),
+        "top_congested_roads": top_congested,
+        "hotspots": detect_hotspots(reports),
+        "data_source": "CityMind Digital Twin (Synthetic Demo Data)",
+        "last_updated": __import__("datetime").datetime.now().isoformat()
     }
 
 def get_city_map_data(db: Session) -> dict:
@@ -37,12 +57,8 @@ def get_city_map_data(db: Session) -> dict:
     events = db.query(Event).all()
 
     def congestion_level(r: Road) -> str:
-        util = r.traffic_volume / max(r.capacity, 1)
-        if util < 0.4:
-            return "low"
-        elif util < 0.7:
-            return "medium"
-        return "high"
+        u = r.traffic_volume / max(r.capacity, 1)
+        return "low" if u < 0.4 else "medium" if u < 0.7 else "high"
 
     return {
         "roads": [
@@ -70,7 +86,8 @@ def get_city_map_data(db: Session) -> dict:
         "reports": [
             {"id": r.id, "category": r.category, "location": r.location,
              "lat": r.lat, "lon": r.lon, "severity": r.severity,
-             "description": r.description, "confidence": r.confidence}
+             "description": r.description, "confidence": r.confidence,
+             "status": r.status}
             for r in reports if r.lat and r.lon
         ],
         "events": [
