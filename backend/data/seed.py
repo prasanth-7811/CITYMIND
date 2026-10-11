@@ -76,16 +76,20 @@ EVENTS = [
 def seed_data():
     db = SessionLocal()
     try:
-        if db.query(Road).count() > 0:
-            return
+        # Always seed — /tmp is wiped on Vercel cold starts
+        existing_ids = {r.id for r in db.query(Road).all()}
         for n in NODES:
-            db.add(Node(**n))
+            if not db.query(Node).filter_by(id=n["id"]).first():
+                db.add(Node(**n))
         for r in ROADS:
-            db.add(Road(**r))
+            if r["id"] not in existing_ids:
+                db.add(Road(**r))
         for z in ZONES:
-            db.add(Zone(**z))
+            if not db.query(Zone).filter_by(id=z["id"]).first():
+                db.add(Zone(**z))
         for e in EVENTS:
-            db.add(Event(**e))
+            if not db.query(Event).filter_by(id=e["id"]).first():
+                db.add(Event(**e))
         db.commit()
     finally:
         db.close()

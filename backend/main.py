@@ -27,6 +27,12 @@ app.add_middleware(
 
 app.include_router(router, prefix="/api")
 
+@app.get("/seed")
+def force_seed():
+    from .data.seed import seed_data
+    seed_data()
+    return {"message": "Seeded"}
+
 @app.get("/")
 def root():
     return {"message": "CityMind API running", "docs": "/docs"}
