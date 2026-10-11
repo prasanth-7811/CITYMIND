@@ -34,6 +34,7 @@ async function proxyPost(path, body, res) {
 router.get('/dashboard',  (req, res) => proxyGet('/api/dashboard', res))
 router.get('/city',       (req, res) => proxyGet('/api/city', res))
 router.get('/roads',      (req, res) => proxyGet('/api/roads', res))
+router.get('/seed',       (req, res) => proxyGet('/api/seed', res))
 router.post('/simulate',  (req, res) => proxyPost('/api/simulate', req.body, res))
 router.post('/apply-recommendation', (req, res) => proxyPost('/api/apply-recommendation', req.body, res))
 
