@@ -14,6 +14,13 @@ from data.seed import seed_data
 Base.metadata.create_all(bind=engine)
 seed_data()
 
+# Pre-load ML model at startup so first /simulate request doesn't timeout
+try:
+    from ai.ml_model import get_model
+    get_model()
+except Exception:
+    pass
+
 app = FastAPI(title="CityMind API", version="1.0.0")
 
 ALLOWED_ORIGINS = [
