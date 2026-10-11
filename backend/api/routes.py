@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from backend.database.db import get_db
-from backend.models.models import Road, Node, Zone, CitizenReport, Event, Simulation, SimulationResult, Recommendation
-from backend.schemas.schemas import SimulateRequest, ReportCreate, ReportOut
-from backend.services.city_service import get_dashboard_data, get_city_map_data
-from backend.simulation.engine import run_simulation
-from backend.ai.collective_intelligence import calculate_confidence
+from ..database.db import get_db
+from ..models.models import Road, Node, Zone, CitizenReport, Event, Simulation, SimulationResult, Recommendation
+from ..schemas.schemas import SimulateRequest, ReportCreate, ReportOut
+from ..services.city_service import get_dashboard_data, get_city_map_data
+from ..simulation.engine import run_simulation
+from ..ai.collective_intelligence import calculate_confidence
 
 router = APIRouter()
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from backend.models.models import Road, Node, Zone, CitizenReport, Event
-from backend.ai.collective_intelligence import detect_hotspots
+from ..models.models import Road, Node, Zone, CitizenReport, Event
+from ..ai.collective_intelligence import detect_hotspots
 
 def get_dashboard_data(db: Session) -> dict:
     roads = db.query(Road).all()

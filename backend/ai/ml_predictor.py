@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List
 from backend.models.models import Road, CitizenReport
-from backend.ai.ml_model import get_model, FEATURE_NAMES
+from .ml_model import get_model, FEATURE_NAMES
 
 WEATHER_IMPACT_MAP = {
     "clear": 0.0, "cloudy": 0.05, "light_rain": 0.15,

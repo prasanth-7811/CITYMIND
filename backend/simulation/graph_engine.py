@@ -1,6 +1,6 @@
 import networkx as nx
 from typing import List, Dict, Tuple
-from backend.models.models import Road, Node
+from ..models.models import Road, Node
 
 HOSPITAL_ROADS = {"R6", "R16"}  # Roads leading to GKNM Hospital
 

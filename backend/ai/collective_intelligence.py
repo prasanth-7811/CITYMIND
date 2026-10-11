@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime, timezone
-from backend.models.models import CitizenReport
+from ..models.models import CitizenReport
 
 def calculate_confidence(reports: List[CitizenReport]) -> float:
     if not reports:

@@ -1,5 +1,5 @@
-from backend.database.db import SessionLocal
-from backend.models.models import Road, Node, Zone, Event
+from ..database.db import SessionLocal
+from ..models.models import Road, Node, Zone, Event
 
 # Real Coimbatore, Tamil Nadu coordinates
 NODES = [

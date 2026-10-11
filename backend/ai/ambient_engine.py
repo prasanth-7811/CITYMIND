@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from backend.models.models import Event, CitizenReport
+from ..models.models import Event, CitizenReport
 
 def get_ambient_context(
     weather: str,
