@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database.db import engine
@@ -6,10 +7,13 @@ from .models.models import Base
 from .api.routes import router
 from .data.seed import seed_data
 
-Base.metadata.create_all(bind=engine)
-seed_data()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    seed_data()
+    yield
 
-app = FastAPI(title="CityMind API", version="1.0.0")
+app = FastAPI(title="CityMind API", version="1.0.0", lifespan=lifespan)
 
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -27,9 +31,9 @@ app.add_middleware(
 
 app.include_router(router, prefix="/api")
 
-@app.get("/seed")
+@app.get("/api/seed")
 def force_seed():
-    from .data.seed import seed_data
+    Base.metadata.create_all(bind=engine)
     seed_data()
     return {"message": "Seeded"}
 
