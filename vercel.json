@@ -3,7 +3,7 @@
   "services": {
     "backend": {
       "root": "backend",
-      "framework": "fastapi",
+      "runtime": "python3.12",
       "entrypoint": "main.py"
     },
     "server": {
