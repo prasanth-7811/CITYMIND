@@ -1,5 +1,4 @@
 import os
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database.db import engine
@@ -7,13 +6,11 @@ from .models.models import Base
 from .api.routes import router
 from .data.seed import seed_data
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
-    seed_data()
-    yield
+# Runs on every cold start (module import) — safe because seed uses upsert logic
+Base.metadata.create_all(bind=engine)
+seed_data()
 
-app = FastAPI(title="CityMind API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="CityMind API", version="1.0.0")
 
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -39,4 +36,4 @@ def force_seed():
 
 @app.get("/")
 def root():
-    return {"message": "CityMind API running", "docs": "/docs"}
+    return {"message": "CityMind API running"}

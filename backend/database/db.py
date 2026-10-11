@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 import os
-_db_path = "/tmp/citymind.db" if os.getenv("VERCEL") else "./citymind.db"
+_db_path = "/tmp/citymind.db" if (os.getenv("VERCEL") or os.getenv("VERCEL_ENV")) else "./citymind.db"
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{_db_path}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
