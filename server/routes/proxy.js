@@ -7,8 +7,9 @@ const PYTHON_API = process.env.PYTHON_API || 'http://localhost:8000'
 async function proxyGet(path, res) {
   try {
     const r = await fetch(`${PYTHON_API}${path}`)
-    if (!r.ok) return res.status(r.status).json({ error: `Upstream error ${r.status}` })
-    res.json(await r.json())
+    const text = await r.text()
+    if (!r.ok) return res.status(r.status).json({ error: `Upstream error ${r.status}`, detail: text })
+    res.json(JSON.parse(text))
   } catch (err) {
     res.status(502).json({ error: 'Python API unreachable', message: err.message })
   }
