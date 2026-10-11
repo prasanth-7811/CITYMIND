@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from backend.models.models import Road, CitizenReport
+from ..models.models import Road, CitizenReport
 from .ml_model import get_model, FEATURE_NAMES
 
 WEATHER_IMPACT_MAP = {
