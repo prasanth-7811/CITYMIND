@@ -1,10 +1,9 @@
 import axios from 'axios'
 
-// FastAPI (simulation, map, dashboard) via Vite proxy
+// All API calls go through /api — routed to Node.js server by Vercel rewrite (prod)
+// or by Vite proxy (dev). Node.js proxies simulation calls to FastAPI internally.
 const api = axios.create({ baseURL: '/api' })
-
-// Node.js/Express server (MongoDB CRUD for reports)
-const nodeApi = axios.create({ baseURL: 'http://localhost:3001/api' })
+const nodeApi = api
 
 export const getDashboard = () => api.get('/dashboard').then(r => r.data)
 export const getCityMap   = () => api.get('/city').then(r => r.data)
