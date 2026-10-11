@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON
 from sqlalchemy.sql import func
-from ..database.db import Base
+from database.db import Base
 
 class Road(Base):
     __tablename__ = "roads"

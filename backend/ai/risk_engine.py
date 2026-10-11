@@ -1,5 +1,5 @@
 from typing import List
-from ..models.models import Road, CitizenReport
+from models.models import Road, CitizenReport
 
 WEATHER_WEIGHTS = {
     "clear": 0.0, "cloudy": 0.05, "light_rain": 0.15,

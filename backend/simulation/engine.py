@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
 from typing import List
-from ..models.models import Road, Node, CitizenReport, Event, Simulation, SimulationResult, Recommendation
-from ..simulation.graph_engine import CityGraph
-from ..ai.risk_engine import calculate_risk_score
-from ..ai.ambient_engine import get_ambient_context
-from ..ai.recommendation_engine import generate_recommendations, apply_recommendation_impact
-from ..ai.ml_predictor import predict_congestion
-from ..schemas.schemas import SimulateRequest
+from models.models import Road, Node, CitizenReport, Event, Simulation, SimulationResult, Recommendation
+from simulation.graph_engine import CityGraph
+from ai.risk_engine import calculate_risk_score
+from ai.ambient_engine import get_ambient_context
+from ai.recommendation_engine import generate_recommendations, apply_recommendation_impact
+from ai.ml_predictor import predict_congestion
+from schemas.schemas import SimulateRequest
 
 WEATHER_SPEED_FACTOR = {
     "clear": 1.0, "cloudy": 0.97, "light_rain": 0.88,

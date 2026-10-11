@@ -1,12 +1,16 @@
 import os
+import sys
+
+# Add backend directory to path so absolute imports work on Vercel
+sys.path.insert(0, os.path.dirname(__file__))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database.db import engine
-from .models.models import Base
-from .api.routes import router
-from .data.seed import seed_data
+from database.db import engine
+from models.models import Base
+from api.routes import router
+from data.seed import seed_data
 
-# Runs on every cold start (module import) — safe because seed uses upsert logic
 Base.metadata.create_all(bind=engine)
 seed_data()
 

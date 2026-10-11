@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from ..models.models import Road, Node, Zone, CitizenReport, Event
-from ..ai.collective_intelligence import detect_hotspots
-from ..data.seed import NODES, ROADS, ZONES, EVENTS
+from models.models import Road, Node, Zone, CitizenReport, Event
+from ai.collective_intelligence import detect_hotspots
+from data.seed import NODES, ROADS, ZONES, EVENTS
 
 def get_dashboard_data(db: Session) -> dict:
     roads = db.query(Road).all()
