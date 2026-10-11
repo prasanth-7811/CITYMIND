@@ -4,10 +4,7 @@
     "backend": {
       "root": "backend",
       "framework": "fastapi",
-      "entrypoint": "main.py",
-      "env": {
-        "VERCEL": "1"
-      }
+      "entrypoint": "main.py"
     },
     "server": {
       "root": "server",
